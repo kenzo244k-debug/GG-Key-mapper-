@@ -1,0 +1,15 @@
+GG KEY MAPPER — versão com editor HUD e mapeamento por Acessibilidade
+
+Mantém o nome, pacote com.ggkeymapper, orientação paisagem e identidade verde/preta.
+
+Funcionalidades desta versão:
+- Bolinha GG flutuante e arrastável.
+- Menu da bolinha com atalho para abrir o editor.
+- Editor HUD em paisagem com marcadores posicionáveis por toque/arraste.
+- Cadastro de códigos de teclas físicas para cada marcador.
+- Salvamento local dos mapeamentos e perfis nomeados.
+- Serviço de Acessibilidade que recebe teclas físicas e solicita um toque na coordenada configurada.
+
+Limitações: mapeia teclas físicas para toques simples; não oferece movimento analógico, arrasto contínuo, joystick virtual, detecção automática de jogos ou ajuste real de sensibilidade FPS. Alguns jogos podem bloquear gestos de acessibilidade. As coordenadas podem variar conforme barras do sistema e recortes. Habilite o serviço de Acessibilidade somente se confiar no app.
+
+Build: AGP 8.7.3, Kotlin 2.0.21, compileSdk 35. O APK ainda depende da execução bem-sucedida do GitHub Actions e de testes no aparelho real.
