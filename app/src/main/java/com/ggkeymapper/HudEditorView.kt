@@ -15,6 +15,13 @@ class HudEditorView(context: Context) : View(context) {
     var onSelectionChanged: (() -> Unit)? = null
     private var dragging = false
 
+    private fun screenPoint(mapping: KeyMapping): Pair<Float, Float> {
+        val location = IntArray(2)
+        getLocationOnScreen(location)
+        val metrics = resources.displayMetrics
+        return Pair(mapping.x * metrics.widthPixels - location[0], mapping.y * metrics.heightPixels - location[1])
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas.drawColor(Color.rgb(12, 24, 16))
@@ -27,8 +34,7 @@ class HudEditorView(context: Context) : View(context) {
         var y = 0f
         while (y <= height) { canvas.drawLine(0f, y, width.toFloat(), y, paint); y += stepY }
         mappings.forEachIndexed { index, mapping ->
-            val cx = mapping.x * width
-            val cy = mapping.y * height
+            val (cx, cy) = screenPoint(mapping)
             paint.color = if (index == selectedIndex) Color.YELLOW else Color.rgb(57, 232, 121)
             paint.style = Paint.Style.FILL
             canvas.drawCircle(cx, cy, 25f, paint)
@@ -40,20 +46,20 @@ class HudEditorView(context: Context) : View(context) {
         paint.color = Color.LTGRAY
         paint.textSize = 13f
         paint.textAlign = Paint.Align.LEFT
-        canvas.drawText("Toque em um ponto para posicionar o botão selecionado", 12f, height - 12f, paint)
+        canvas.drawText("Arraste os marcadores para a posição dos controles do jogo", 12f, height - 12f, paint)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 selectedIndex = mappings.indices.minByOrNull { index ->
-                    val m = mappings[index]
-                    val dx = event.x - m.x * width
-                    val dy = event.y - m.y * height
+                    val (cx, cy) = screenPoint(mappings[index])
+                    val dx = event.x - cx
+                    val dy = event.y - cy
                     dx * dx + dy * dy
                 }?.takeIf { index ->
-                    val m = mappings[index]
-                    abs(event.x - m.x * width) < 45 && abs(event.y - m.y * height) < 45
+                    val (cx, cy) = screenPoint(mappings[index])
+                    abs(event.x - cx) < 45 && abs(event.y - cy) < 45
                 } ?: selectedIndex
                 dragging = true
                 updatePosition(event.x, event.y)
@@ -68,7 +74,13 @@ class HudEditorView(context: Context) : View(context) {
 
     private fun updatePosition(x: Float, y: Float) {
         if (selectedIndex in mappings.indices) {
-            mappings[selectedIndex] = mappings[selectedIndex].copy(x = (x / width.coerceAtLeast(1)).coerceIn(0f, 1f), y = (y / height.coerceAtLeast(1)).coerceIn(0f, 1f))
+            val location = IntArray(2)
+            getLocationOnScreen(location)
+            val metrics = resources.displayMetrics
+            mappings[selectedIndex] = mappings[selectedIndex].copy(
+                x = ((location[0] + x) / metrics.widthPixels.coerceAtLeast(1)).coerceIn(0f, 1f),
+                y = ((location[1] + y) / metrics.heightPixels.coerceAtLeast(1)).coerceIn(0f, 1f)
+            )
             invalidate()
         }
     }
