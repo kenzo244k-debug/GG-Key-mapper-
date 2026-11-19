@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">GG Key mapper</string>
+    <string name="accessibility_description">Permite que o GG Key mapper transforme teclas físicas cadastradas em toques nas posições configuradas pelo usuário.</string>
+</resources>
