@@ -1,0 +1,7 @@
+GG KEY MAPPER — compilação pelo GitHub Actions
+
+O workflow gera um APK debug e publica o arquivo app-debug.apk como artefato baixável quando a compilação termina com sucesso.
+
+Abra a aba Actions do repositório, selecione “Gerar APK do GG Key mapper” e execute Run workflow. Ao terminar com sucesso, abra a execução e baixe o artefato GG-Key-Mapper-APK.
+
+O APK debug é para teste. O app requer permissões de sobreposição e, para mapear teclas, ativação manual do serviço de Acessibilidade. Compatibilidade com jogos não é universal.
